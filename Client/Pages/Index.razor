@@ -1,0 +1,134 @@
+﻿@page "/"
+
+
+<PageTitle>Index</PageTitle>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML with CSS and JavaScript</title>
+
+
+
+ <style>
+ #awesome {
+  text-transform: uppercase;
+  font-size: 5rem;
+  font-weight: 700;
+  line-height: 1;
+  border: 5px solid;
+  padding: 2rem;
+  width: 20px;
+}
+
+/*article p:first-of-type {
+            color: red;
+            font-size: 1.5em;
+        } */
+
+        a:hover {
+            outline: 10px dotted green;
+        }
+
+
+        .my-button {
+            background: blue;
+        }
+
+        [onclick] {
+            background: grey;
+        }
+
+        .my-element1 {
+            display: flex;
+            background: grey;
+        }
+</style>
+</head>
+<body>
+    
+<main>
+  <div class="wrapper">
+    <article class="flow">
+      <p id="awesome">CSS Test</p>
+    </article>
+
+            <button class="my-button"  @onclick="calljs3">change css</button>
+  </div>
+
+</main>
+<div>
+
+        <button @onclick="calljs2"> Next Test </button>
+</div>
+
+</body>
+</html>
+
+
+@code {
+
+
+    [Inject]
+    public IJSRuntime JSRuntime { get; set; }
+
+
+    private IJSObjectReference _jsModule;
+    private string _registrationResult;
+
+    private async Task RegisterEmail() =>
+    _registrationResult = await _jsModule.InvokeAsync<string>("emailRegistration", "Please provide your email");
+
+
+
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await CallJavaScriptCodeAsync();   // OK
+        }
+    }
+
+
+    private async Task CallJavaScriptCodeAsync()
+    {
+        await JSRuntime.InvokeVoidAsync("eval", @"
+            const heading = document.createElement('h1');
+            const headingText = document.createTextNode('New Line Added ...');
+            heading.appendChild(headingText);
+            document.body.appendChild(heading);"
+        );
+    }
+
+
+
+    private async Task calljs1()
+    {
+        await JSRuntime.InvokeVoidAsync("eval", @"document.getElementById('demo').innerHTML = 'end';");
+
+    }
+
+
+    private async Task calljs2()
+    {
+        await JSRuntime.InvokeVoidAsync("changeheader");
+
+    }
+    private async Task calljs3()
+    {
+        await JSRuntime.InvokeVoidAsync("changecssstyle");
+        //await JSRuntime.InvokeVoidAsync("showAlert");
+        
+    }
+
+    
+
+    
+
+
+}
